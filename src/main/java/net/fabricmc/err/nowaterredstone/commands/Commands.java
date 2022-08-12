@@ -1,6 +1,6 @@
 package net.fabricmc.err.nowaterredstone.commands;
 
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.command.CommandManager;
@@ -22,7 +22,7 @@ public class Commands {
 	}
 
 	public static void initialize(){
-		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
+		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
 			LiteralCommandNode<ServerCommandSource> modNode = CommandManager
 				.literal(NoWaterRedstone.MODID)
 				.build();
