@@ -20,9 +20,10 @@ import net.minecraft.world.BlockView;
 import net.fabricmc.err.nowaterredstone.Config;
 
 @Mixin(FlowableFluid.class)
-public abstract class FlowableFluidMixin {
-
-	private boolean isRedstoneBlock(BlockState state) {
+public abstract class FlowableFluidMixin
+{
+	private boolean isRedstoneBlock(BlockState state)
+	{
 		if (Config.redstoneBlocks().contains("minecraft:button") && state.getBlock() instanceof AbstractButtonBlock) return true;
 		String blockID = Registry.BLOCK.getId(state.getBlock()).toString();
 		return Config.redstoneBlocks().contains(blockID);
@@ -39,8 +40,10 @@ public abstract class FlowableFluidMixin {
 		FluidState fluidState,
 		Fluid fluid,
 		CallbackInfoReturnable<Boolean> info
-	) {
-		if (Config.enable() && fluid.matchesType(Fluids.WATER) && isRedstoneBlock(flowToBlockState)) {
+	)
+	{
+		if (Config.enable() && fluid.matchesType(Fluids.WATER) && isRedstoneBlock(flowToBlockState))
+		{
 			info.setReturnValue(false);
 		}
 	}

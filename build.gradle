@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.12.54'
+	id 'fabric-loom' version '1.5-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -51,26 +51,5 @@ java {
 jar {
 	from("LICENSE") {
 		rename { "${it}_${project.archivesBaseName}"}
-	}
-}
-
-// configure the maven publication
-publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			from components.java
-			pom {
-				name = 'NoWaterRedstone'
-				description = 'Fabric mod to prevent redstone items from being washed away.'
-				url = 'https://github.com/Err0rC0deX/NoWaterRedstone'
-			}
-		}
-	}
-
-	repositories {
-		maven {
-			name = 'Local'
-			url = layout.buildDirectory.dir("repo")
-		}
 	}
 }

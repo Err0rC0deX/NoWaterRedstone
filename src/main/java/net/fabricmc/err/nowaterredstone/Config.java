@@ -24,7 +24,8 @@ public class Config {
 	protected static Boolean enable = true;
 	protected static Set<String> redstoneBlocks = new HashSet<>();
 
-	public static String[] defaultRedstoneBlocks() {
+	public static String[] defaultRedstoneBlocks()
+	{
 		Set<String> blocks = new HashSet<>();
 		blocks.add("minecraft:button");
 		blocks.add("minecraft:lever");
@@ -36,20 +37,25 @@ public class Config {
 		return blocks.stream().filter(Objects::nonNull).toArray(String[]::new);
 	}
 
-	public static void initialize() {
+	public static void initialize()
+	{
 		propertiesFile = FabricLoader.getInstance().getConfigDir().resolve(NoWaterRedstone.MODID).resolve(NoWaterRedstone.MODID + ".properties");
 	}
 
-	public static void load() {
+	public static void load()
+	{
 		Boolean failed = false;
-		try (InputStream stream = new FileInputStream(propertiesFile.toFile())) {
+		try (InputStream stream = new FileInputStream(propertiesFile.toFile()))
+		{
 			properties.load(stream);
 		}
-		catch (FileNotFoundException exception) {
+		catch (FileNotFoundException exception)
+		{
 			NoWaterRedstone.LOGGER.info("No configuration found");
 			failed = true;
 		}
-		catch (IOException exception) {
+		catch (IOException exception)
+		{
 			NoWaterRedstone.LOGGER.warn("Failed to read configuration", exception);
 		}
 
@@ -57,116 +63,135 @@ public class Config {
 		enable = getBool("enable", true);
 		redstoneBlocks = getStringSet("redstoneBlocks", defaultRedstoneBlocks());
 
-		if (failed) {
+		if (failed)
+		{
 			NoWaterRedstone.LOGGER.info("Generating new configuration");
 			write();
 		}
 	}
 
-	public static void write() {
+	public static void write()
+	{
 		propertiesFile.toFile().getParentFile().mkdirs();
-		try (OutputStream output = new FileOutputStream(propertiesFile.toFile())) {
+		try (OutputStream output = new FileOutputStream(propertiesFile.toFile()))
+		{
 			properties.store(output, "Don't put comments; they get removed");
 		}
-		catch (IOException e) {
-			NoWaterRedstone.LOGGER.warn("Failed to write configuration", e);
+		catch (IOException exception) {
+			NoWaterRedstone.LOGGER.warn("Failed to write configuration", exception);
 		}
 	}
 
-	public static Boolean enable() {
+	public static Boolean enable()
+	{
 		return enable;
 	}
 
-	public static void enable(Boolean value) {
-		if(enable != value) {
+	public static void enable(Boolean value)
+	{
+		if(enable != value)
+		{
 			enable = value;
 			properties.setProperty("enable", enable ? "true" : "false");
 			write();
 		}
 	}
 
-	public static Set<String> redstoneBlocks() {
+	public static Set<String> redstoneBlocks()
+	{
 		return redstoneBlocks;
 	}
 
-	protected static String getString(String key, String def) {
-		if (def == null) def = "";
+	protected static String getString(String key, String defaultValue)
+	{
+		if (defaultValue == null) defaultValue = "";
 		String value = properties.getProperty(key);
-		if (value == null) {
-			properties.setProperty(key, def);
-			return def;
+		if (value == null)
+		{
+			properties.setProperty(key, defaultValue);
+			return defaultValue;
 		}
 		return value;
 	}
 
-	protected static boolean getBool(String key, boolean def) {
+	protected static boolean getBool(String key, boolean defaultValue)
+	{
 		String value = properties.getProperty(key);
-		if (value == null) {
-			properties.setProperty(key, def ? "true" : "false");
-			return def;
+		if (value == null)
+		{
+			properties.setProperty(key, defaultValue ? "true" : "false");
+			return defaultValue;
 		}
 		return value.equalsIgnoreCase("true") || value.equals("1");
 	}
 
-	protected static int getInt(String key, int def) {
+	protected static int getInt(String key, int defaultValue)
+	{
 		String value = properties.getProperty(key);
-		if (value == null) {
-			properties.setProperty(key, String.valueOf(def));
-			return def;
+		if (value == null)
+		{
+			properties.setProperty(key, String.valueOf(defaultValue));
+			return defaultValue;
 		}
-		else {
-			try {
-				return Integer.parseInt(value);
-			}
-			catch (NumberFormatException exception) {
-				properties.setProperty(key, String.valueOf(def));
-				return def;
-			}
+		try
+		{
+			return Integer.parseInt(value);
+		}
+		catch (NumberFormatException exception)
+		{
+			properties.setProperty(key, String.valueOf(defaultValue));
+			return defaultValue;
 		}
 	}
 
-	protected static double getDouble(String key, double def) {
+	protected static double getDouble(String key, double defaultValue)
+	{
 		String value = properties.getProperty(key);
-		if (value == null) {
-			properties.setProperty(key, String.valueOf(def));
-			return def;
+		if (value == null)
+		{
+			properties.setProperty(key, String.valueOf(defaultValue));
+			return defaultValue;
 		}
-		else {
-			try {
-				return Double.parseDouble(value);
-			}
-			catch (NumberFormatException exception) {
-				properties.setProperty(key, String.valueOf(def));
-				return def;
-			}
+		try
+		{
+			return Double.parseDouble(value);
+		}
+		catch (NumberFormatException exception)
+		{
+			properties.setProperty(key, String.valueOf(defaultValue));
+			return defaultValue;
 		}
 	}
 
-	protected static Set<String> getStringSet(String key, String[] def) {
+	protected static Set<String> getStringSet(String key, String[] defaultValue)
+	{
 		String value = properties.getProperty(key);
-		if (value == null) {
-			properties.setProperty(key, joinString(def, ","));
-			return new HashSet<>(Arrays.asList(def));
+		if (value == null)
+		{
+			properties.setProperty(key, joinString(defaultValue, ","));
+			return new HashSet<>(Arrays.asList(defaultValue));
 		}
-		else {
-			Set<String> set = new HashSet<>();
-			String[] parts = value.split(",");
-			for (String part : parts) {
-				try {
-					set.add(part.trim());
-				}
-				catch (NumberFormatException exception) {}
+		Set<String> set = new HashSet<>();
+		String[] parts = value.split(",");
+		for (String part : parts)
+		{
+			try
+			{
+				set.add(part.trim());
 			}
-			return set;
+			catch (NumberFormatException exception) {}
 		}
+		return set;
 	}
 
-	public static String joinString(String[] strings, String delimiter) {
+	public static String joinString(String[] strings, String delimiter)
+	{
 		List<String> list = Arrays.asList(strings);
 		if (list.isEmpty()) return "";
 		StringBuilder buffer = new StringBuilder();
 		Iterator<?> iter = list.iterator();
-		while (iter.hasNext()) {
+		while (iter.hasNext())
+		{
 			buffer.append(iter.next());
 			if (iter.hasNext()) buffer.append(delimiter);
 		}
