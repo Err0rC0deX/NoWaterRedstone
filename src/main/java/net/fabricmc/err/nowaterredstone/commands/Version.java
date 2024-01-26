@@ -27,7 +27,7 @@ public class Version implements Command<ServerCommandSource> {
 
 	@Override
 	public int run(CommandContext<ServerCommandSource> context) {
-		context.getSource().sendFeedback(Text.literal("version: " + get()), false);
+		context.getSource().sendFeedback(() -> Text.literal("version: " + get()), false);
 		return Command.SINGLE_SUCCESS;
 	}
 }

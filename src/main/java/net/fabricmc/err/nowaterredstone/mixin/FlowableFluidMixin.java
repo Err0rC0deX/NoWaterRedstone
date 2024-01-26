@@ -6,15 +6,15 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.AbstractButtonBlock;
+import net.minecraft.block.ButtonBlock;
 
 import net.minecraft.fluid.FlowableFluid;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.BlockView;
 
 import net.fabricmc.err.nowaterredstone.Config;
@@ -24,8 +24,8 @@ public abstract class FlowableFluidMixin
 {
 	private boolean isRedstoneBlock(BlockState state)
 	{
-		if (Config.redstoneBlocks().contains("minecraft:button") && state.getBlock() instanceof AbstractButtonBlock) return true;
-		String blockID = Registry.BLOCK.getId(state.getBlock()).toString();
+		if (Config.redstoneBlocks().contains("minecraft:button") && state.getBlock() instanceof ButtonBlock) return true;
+		String blockID = Registries.BLOCK.getId(state.getBlock()).toString();
 		return Config.redstoneBlocks().contains(blockID);
 	}
 
